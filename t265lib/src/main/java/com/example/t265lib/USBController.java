@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Process;
 import android.util.Log;
 import android.widget.TextView;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -118,8 +119,7 @@ public class USBController {
         return 0;
     }
 
-    public float[] GetPose()
-    {
+    public float[] GetPose() {
         return resPtr;
     }
 
@@ -269,29 +269,28 @@ public class USBController {
                         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                         while (isRunning) {
                             pollingConnection.bulkTransfer(inEndpoint131, resBuffer, resBuffer.length, 100);
+                            System.arraycopy(resBuffer, offset, xArray, 0, xArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length, yArray, 0, yArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length * 2, zArray, 0, zArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length * 3, qiArray, 0, qiArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length * 4, qjArray, 0, qjArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length * 5, qkArray, 0, qkArray.length);
+                            System.arraycopy(resBuffer, offset + xArray.length * 6, qrArray, 0, qrArray.length);
 
-                            handler.post(new Runnable() {
-                                public void run() {
+                            resPtr[0] = ByteBuffer.wrap(xArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[1] = ByteBuffer.wrap(yArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[2] = ByteBuffer.wrap(zArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[3] = ByteBuffer.wrap(qiArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[4] = ByteBuffer.wrap(qjArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[5] = ByteBuffer.wrap(qkArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                            resPtr[6] = ByteBuffer.wrap(qrArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 
-                                    System.arraycopy(resBuffer, offset, xArray, 0, xArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length, yArray, 0, yArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length* 2, zArray, 0, zArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length* 3, qiArray, 0, qiArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length* 4, qjArray, 0, qjArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length* 5, qkArray, 0, qkArray.length);
-                                    System.arraycopy(resBuffer, offset + xArray.length* 6, qrArray, 0, qrArray.length);
-                                    resPtr[0] = ByteBuffer.wrap(xArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[1] = ByteBuffer.wrap(yArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[2] = ByteBuffer.wrap(zArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[3] = ByteBuffer.wrap(qiArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[4] = ByteBuffer.wrap(qjArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[5] = ByteBuffer.wrap(qkArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    resPtr[6] = ByteBuffer.wrap(qrArray).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                                    if (debugging != null) {
+                            if (debugging != null)
+                                handler.post(new Runnable() {
+                                    public void run() {
                                         debugging.setText(resPtr[0] + ", " + resPtr[1] + ", " + resPtr[2]);
                                     }
-                                }
-                            });
+                                });
                         }
 
                         pollingConnection.releaseInterface(t265Interface);
@@ -330,7 +329,7 @@ public class USBController {
         while (dg.hasNext()) {
             UsbDevice arch = (UsbDevice) dg.next();
             if (arch.getVendorId() == vid) ud = arch;
-            Log.e("vladbliat", String.valueOf(arch.getVendorId()));
+            Log.e(TAG, String.valueOf(arch.getVendorId()));
         }
 
         return ud;
@@ -394,13 +393,13 @@ public class USBController {
                         else if (vendorId == 32903)
                             openStream();
                     } else {
-                        Log.e("premissionCrap", "permission denied for device " + device);
+                        Log.e(TAG, "permission denied for device " + device);
                     }
                 }
             if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action))
                 synchronized (this) {
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    Log.e("ihateunity", "in device attached action " + device.getDeviceName());
+                    Log.e(TAG, "in device attached action " + device.getDeviceName());
 
                     if (device.getVendorId() == 32903)
                         getPremission(usbManager, device);

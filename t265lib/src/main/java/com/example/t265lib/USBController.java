@@ -45,11 +45,13 @@ public class USBController {
     private UsbDeviceConnection pollingConnection;
     private UsbInterface t265Interface;
     private TextView debugging;
+    private PluginCallBack callBack;
     private boolean isRunning = true;
 
-    public USBController(Context context, int chunkSize, TextView deb) {
+    public USBController(Context context, int chunkSize, TextView deb, PluginCallBack cb) {
         if (deb != null) debugging = deb;
         if (chunkSize != 0) CHUNK_SIZE = chunkSize;
+        if (cb != null) callBack = cb;
         msg = new byte[9];
         msgResponse = new byte[8];
         resPtr = new float[7];
@@ -111,7 +113,7 @@ public class USBController {
 
                 connection.releaseInterface(ud.getInterface(0));
                 connection.close();
-                debugging.append(": success.");
+                if (debugging != null) debugging.append(": success.");
             }
         } else {
             return -2;
@@ -300,8 +302,11 @@ public class USBController {
                 pollingThread.start();
             }
         } else return -1;
+
+        if (callBack != null) callBack.OnSuccess();
         return 0;
     }
+
 
     public void KillStream() {
      /*   byte[] stopMsg = new byte[8];
@@ -323,7 +328,6 @@ public class USBController {
 
         HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
         Iterator dg = deviceList.values().iterator();
-
         UsbDevice ud = null;
 
         while (dg.hasNext()) {

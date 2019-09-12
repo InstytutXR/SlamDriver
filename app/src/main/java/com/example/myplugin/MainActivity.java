@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView tv = findViewById(R.id.archa);
-        USBController uc = new USBController(this, 0, tv);
+        USBController uc = new USBController(this, 0, tv, null);
         Button bt = (Button)findViewById(R.id.killButton);
         int res = uc.loadT265fw();
    /*     Log.e("archa", ":" + res);

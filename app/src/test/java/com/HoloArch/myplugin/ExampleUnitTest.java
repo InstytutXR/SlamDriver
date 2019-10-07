@@ -1,4 +1,4 @@
-package com.example.t265lib;
+package com.HoloArch.myplugin;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.myplugin;
+package com.HoloArch.myplugin;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.myplugin", appContext.getPackageName());
+        assertEquals("com.HoloArch.myplugin", appContext.getPackageName());
     }
 }

@@ -1,12 +1,11 @@
-package com.example.myplugin;
+package com.HoloArch.myplugin;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.t265lib.USBController;
+import com.HoloArch.t265lib.USBController;
 
 public class MainActivity extends Activity {
 

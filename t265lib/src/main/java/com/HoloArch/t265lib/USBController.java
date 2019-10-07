@@ -1,4 +1,4 @@
-package com.example.t265lib;
+package com.HoloArch.t265lib;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -30,7 +30,7 @@ import java.util.List;
 public class USBController {
 
     private Context context;
-    private static final String ACTION_USB_PERMISSION = "com.example.t265lib.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "com.HoloArch.t265lib.USB_PERMISSION";
     private UsbManager usbManager;
     private int CHUNK_SIZE = 512 * 32;
     private final String TAG = "vladbliat";

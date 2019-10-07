@@ -1,4 +1,4 @@
-package com.example.t265lib;
+package com.HoloArch.t265lib;
 
 public interface PluginCallBack {
     void OnSuccess();

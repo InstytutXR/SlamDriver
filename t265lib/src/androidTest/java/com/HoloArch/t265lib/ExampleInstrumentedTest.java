@@ -1,4 +1,4 @@
-package com.example.t265lib;
+package com.HoloArch.t265lib;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.t265lib.test", appContext.getPackageName());
+        assertEquals("com.HoloArch.t265lib.test", appContext.getPackageName());
     }
 }
